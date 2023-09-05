@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match Prediction</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style1.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="{{ url_for('static', filename='js/sectionCreation.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/Pl_fixtures.js') }}"defer></script>
+    <script src="{{ url_for('static', filename='js/liga_fixtures.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/bundes_fixtures.js') }}"defer></script>
+    <script src="{{ url_for('static', filename='js/ligue1_fixtures.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/serieA_fixtures.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/navigation.js') }}" defer></script>
+    {% block style %} 
+    {% endblock %}  
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="{{ url_for('static', filename='img/premierleague.png') }}" alt="Premier League">
+            <h1>Premier League</h1>
+        </div>
+        {% block content %}
+        <div class="navbar">
+            <div class="link active" data-img="premierleague.png" data-title="Premier League">Premier League</div>
+            <div class="link" data-img="laliga1.png" data-title="La Liga">La Liga</div>
+            <div class="link" data-img="bundesliga.png" data-title="Bundesliga">Bundesliga</div>
+            <div class="link" data-img="serieA.png" data-title="Serie A">Serie A</div>
+            <div class="link" data-img="ligue1.png" data-title="Ligue 1">Ligue 1</div>
+        </div>
+        <div class="tabs">
+            <div class="tab Premier-league">PL</div>
+            <div class="tab La-liga hide">laliga</div>
+            <div class="tab Bundesliga hide">bundesliga</div>
+            <div class="tab Serie-A hide">serie A</div>
+            <div class="tab Ligue-1 hide">ligue 1</div>
+        </div>
+        {% endblock %}
+    </div>
+    
+</body>
+{% block content1 %}
+<script>
+
+</script>
+{% endblock%}
+</html>

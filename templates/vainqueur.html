@@ -1,0 +1,176 @@
+{% extends "index.html"%}
+
+{% block style %} 
+<style>
+#myDiv{
+	position: absolute;
+	left: 21%;
+	top: 200%;
+	width: 500px;
+	height: 500px;
+	
+}
+body{
+    min-width: 605px;
+    background-color: rgb(39, 38, 38);
+    
+  }
+</style>
+{% endblock %}
+{% block content %}
+<!-- <div class="message">
+	<h3 style="text-align: center; color:white;font-size: 20px;">PREDICTION</h3>
+
+</div> -->
+
+<div class="prediction" style="background-color: white;padding-top: 0px;padding-bottom: 40px;border: 1px solid rgb(138, 138, 138);height: 140px;">
+	
+	
+	<div class="predTeams">
+		<div class="predTeam HomePredTeam">
+			<div class="info" >
+				<img src="{{HomeLogoUrl}}" alt="{{HomeTeam}}" style="border-radius:60px;height: 70px;width: 70px;margin-left: 80px;" >
+				<div class="name" style="margin-left: -75px;margin-top: 120px;font-weight: 900;">{{HomeTeam}}</div>
+			</div>
+		</div>
+		<h1 style="text-align: center;font-weight: bolder;font-size: 40px;margin-bottom: 40px;color:black";>VS</h1>
+		
+		<div class="predTeam AwayPredTeam">
+			<div class="info">
+				<div class="name" style="margin-right: -57px;margin-top: 120px;font-weight: 900;">{{AwayTeam}}</div>
+				<img src="{{AwayLogoUrl}}" alt="{{AwayTeam}}" style="border-radius:60px;height: 70px;width: 70px;margin-right: 80px;">
+				
+			</div>
+		</div>
+	</div>
+</div>
+
+	<table style="position: absolute;left: 25.5%; background-color: gray;padding-right: 58px;padding-bottom: 30px;border-radius: 8px;margin-top: 120px;"  >
+		<tr>
+		<th style="text-align: center;padding:8px;padding-bottom: 18px;"> </th>
+		<th style="text-align: center;padding:8px;padding-bottom: 18px;">                     </th>
+		<th style="text-align: center;padding:8px;padding-bottom: 18px;"></th>
+		</tr>
+	
+	<tr>
+		
+	<td style="text-align: center;padding-left:58px;padding-bottom: 18px; font-weight: bolder;color: firebrick;">
+		{{classement1}}
+		
+	</td>
+	<td style="text-align: center;padding-left:58px;padding-bottom: 18px;">
+		OVERALL RANK
+	</td>
+	<td style="text-align: center;padding-left:58px;padding-bottom: 18px;font-weight: bolder;color: rgb(36, 36, 66);">
+		{{classement2}}
+		
+
+	</td>
+
+</tr>
+<tr>
+	{% if note1==note2 %}
+	<td style="text-align: center;padding-left:58px;font-weight: bolder;color: firebrick;">
+		{{note1 |int}}
+	</td>
+	<td style="text-align: center;padding-left:58px;">NOTE/100
+	</td>
+	<td style="text-align: center;padding-left:58px;font-weight: bolder;color:rgb(36, 36, 66);">
+		{{note2 +1|int}}
+	</td>
+	{% else %}
+	<td style="text-align: center;padding-left:58px;font-weight: bolder;color: firebrick;">
+		{{note1 |int}}
+	</td>
+	<td style="text-align: center;padding-left:58px;">NOTE/100
+	</td>
+	<td style="text-align: center;padding-left:58px;font-weight: bolder;color:rgb(36, 36, 66);">
+		{{note2|int}}
+	</td>
+	{% endif %}
+</tr>
+	</table>
+	<h4 style="text-align: center;margin-bottom: -30px;color: white;padding-top: 20px;">TEAMS VICTORY PROBABILITIES</h4>
+	<div class="pourcentages" style="margin-left: 10%;margin-top: 20px;">
+		<div class="pourcentage homePourcent">{{PourcentageHome}}%</div>
+		<div class="pourcentage AwayPourcent">{{PourcentageAway}}%</div>
+	</div>
+	<div class="bar"style="margin-left:10%;margin-top:20px;">
+		<div class="progress homeProgress" ></div>
+		<div class="progress AwayProgress"></div>
+	</div>
+<h4 style="margin-top: 190px;text-align: center;background-color: firebrick;"> LEAGUE PROGRESSION</h4>
+<div id="myDiv"style="margin-top:-168px">
+<canvas id="myChart" class="chart" style="background-color: black; border:2px solid blue;position: absolute;margin-top: -60px;" ></canvas>
+</div>
+</div>
+
+
+{% endblock %}
+{% block content1 %}
+<script>
+	
+	var homeProgress = document.querySelector(".homeProgress");
+	var AwayProgress = document.querySelector('.AwayProgress');
+	homeProgress.style.width ="{{ PourcentageHome }}%" ;
+	AwayProgress.style.width = "{{ PourcentageAway }}%";
+
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+	// Utilisez une requête AJAX pour récupérer les données depuis la vue Flask
+	$.ajax({
+	url: "/data",
+	type: "GET",
+	dataType: "json",
+	success: function(data) {
+		// Créez votre graphique en utilisant les données récupérées
+		var ctx = document.getElementById('myChart');
+		
+		var myChart = new Chart(ctx, {
+			type: 'line',
+			data: {
+				labels:data.range,
+				datasets: [{
+					label: 'Home',
+					data: data.data1,
+					borderColor: 'rgb(200, 9, 12)',
+					backgroundColor: 'rgba(0, 0, 0, 0.2)',
+					tension: 0.2
+				},				
+				{
+					label: 'Away',
+					data: data.data2,
+					borderColor: 'rgb(4, 112, 195)',
+					backgroundColor: 'rgba(0, 0, 0, 0.2)',
+					tension: 0.2
+				}]
+			},
+			options: {
+		scales: {
+			x: {
+				title: {
+					display: true,
+					text: 'Points'
+				}
+			},
+			y: {
+				title: {
+					display: true,
+					text: 'Journees'
+				}
+			}
+		}
+	}
+		});
+	},
+	error: function(error_data) {
+		console.log(error_data);
+	}
+	});
+	
+	</script>
+
+{% endblock %}
+	

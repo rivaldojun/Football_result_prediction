@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Match Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  </head>
+  <body>
+    <h1>Match Info</h1>
+    <form method="post">
+      <label for="league">Championnat:</label>
+      <select id="league" name="league">
+        {% for league in leagues %}
+          <option name="league" value="{{ league }}">{{ league }}</option>
+        {% endfor %}
+      </select>
+      <label  for="team1">Equipe 1:</label>
+      <select  id="team1" name="team1"></select>
+      <label for="team2">Equipe 2:</label>
+      <select id="team2" name="team2"></select>
+      <label for="date">Date du Match:</label>
+      <input type="date" id="date" name="date">
+      <input type="submit" value="Valider">
+    </form>
+    
+    <script>
+      // Fonction pour décoder le JSON et renvoyer l'objet JavaScript correspondant
+      function jsonDecode(s) {
+        return JSON.parse(s.replace(/&quot;/g, '"').replace(/&#x27;/g, "'"));
+      }
+      
+      // Récupération des éléments de formulaire
+      const leagueSelect = document.getElementById('league');
+      const team1Select = document.getElementById('team1');
+      const team2Select = document.getElementById('team2');
+      
+      // Dictionnaire des équipes par championnat
+      const teamsByLeague = jsonDecode('{{ teams_by_league|tojson }}');
+      
+      // Fonction pour mettre à jour les équipes en fonction du championnat sélectionné
+      function updateTeams() {
+        // Récupération du championnat sélectionné
+        const league = leagueSelect.value;
+        
+        // Mise à jour des équipes pour chaque équipe
+        team1Select.innerHTML = '';
+        team2Select.innerHTML = '';
+        for (const team of teamsByLeague[league]) {
+          team1Select.innerHTML += `<option value="${team}">${team}</option>`;
+          team2Select.innerHTML += `<option value="${team}">${team}</option>`;
+        }
+      }
+      
+      // Appel de la fonction une première fois pour initialiser les équipes
+      updateTeams();
+      
+      // Ajout d'un écouteur d'événement pour mettre à jour les équipes à chaque fois que le championnat est changé
+      leagueSelect.addEventListener('change', updateTeams);
+    </script>
+  </body>
+</html>
